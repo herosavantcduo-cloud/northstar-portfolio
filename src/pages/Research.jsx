@@ -46,16 +46,16 @@ export default function Research() {
         ) : (
           <div className="space-y-6">
             {/* Stat cards row */}
-            <ResearchStatCards works={works} />
+            <ResearchStatCards works={filteredWorks} />
 
             {/* Charts grid */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <ResearchScoreChart works={works} />
-              <ResearchOracleStatus works={works} />
+              <ResearchScoreChart works={filteredWorks} />
+              <ResearchOracleStatus works={filteredWorks} />
             </div>
 
             {/* Tag cloud full width */}
-            <ResearchTagCloud works={works} />
+            <ResearchTagCloud works={filteredWorks} />
           </div>
         )}
       </div>
