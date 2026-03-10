@@ -50,6 +50,7 @@
 import Expertise from './pages/Expertise';
 import Home from './pages/Home';
 import Portfolio from './pages/Portfolio';
+import Research from './pages/Research';
 import __Layout from './Layout.jsx';
 
 
@@ -57,6 +58,7 @@ export const PAGES = {
     "Expertise": Expertise,
     "Home": Home,
     "Portfolio": Portfolio,
+    "Research": Research,
 }
 
 export const pagesConfig = {
