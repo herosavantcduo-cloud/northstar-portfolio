@@ -36,15 +36,24 @@ function AppShell({ children, currentPageName }) {
   return (
     <div className="relative min-h-screen" style={{ fontFamily: "'Inter', sans-serif" }}>
       <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
         * { box-sizing: border-box; }
         body { background: #000008; }
-        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar { width: 3px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #00ffcc44; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: #00ffcc33; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #00ffcc66; }
         @keyframes shimmer {
           0% { background-position: -200% center; }
           100% { background-position: 200% center; }
         }
+        @keyframes fadeUp {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        h1, h2, h3 { font-family: 'Space Grotesk', sans-serif; }
+        .font-mono { font-family: 'Space Mono', monospace !important; }
+        ::selection { background: rgba(0,255,204,0.2); color: #00ffcc; }
       `}</style>
 
       {/* Nav */}
