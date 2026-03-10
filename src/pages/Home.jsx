@@ -229,6 +229,7 @@ export default function Home() {
       )}
 
       <div className="h-32" />
+      <MusicPlayer />
     </div>
   );
 }
