@@ -6,6 +6,7 @@ import HolographicBackground from "../components/HolographicBackground";
 import GlitchText from "../components/GlitchText";
 import ExpertiseBar from "../components/ExpertiseBar";
 import WorkCard from "../components/WorkCard";
+import FloatingOrbit from "../components/FloatingOrbit";
 import { ArrowRight } from "lucide-react";
 
 const defaultExpertise = [
