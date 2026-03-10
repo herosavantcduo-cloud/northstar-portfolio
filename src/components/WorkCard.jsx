@@ -148,6 +148,11 @@ export default function WorkCard({ work, onFocus, focused }) {
         )}
       </div>
 
+      {/* Oracle Summary Panel — research only */}
+      {work.category === "research" && (
+        <OracleSummaryPanel work={work} />
+      )}
+
       {/* Glow border sweep */}
       {hovered && (
         <div
