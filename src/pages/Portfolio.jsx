@@ -79,7 +79,7 @@ export default function Portfolio() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {filtered.map((w) => (
-              <WorkCard key={w.id} work={w} />
+              <WorkCard key={w.id} work={w} focused={focusedId === w.id} onFocus={setFocusedId} />
             ))}
           </div>
         )}
