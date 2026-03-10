@@ -11,12 +11,15 @@ import ResearchStatCards from "@/components/research/ResearchStatCards";
 export default function Research() {
   const [works, setWorks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { applyFilters } = useFilters();
 
   useEffect(() => {
     base44.entities.Work.filter({ category: "research" })
       .then(setWorks)
       .finally(() => setLoading(false));
   }, []);
+
+  const filteredWorks = applyFilters(works);
 
   return (
     <div className="min-h-screen relative" style={{ background: "#000008" }}>

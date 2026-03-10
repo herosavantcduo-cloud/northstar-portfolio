@@ -12,6 +12,7 @@ export default function Portfolio() {
   const [filter, setFilter] = useState("all");
   const [loading, setLoading] = useState(true);
   const [focusedId, setFocusedId] = useState(null);
+  const { applyFilters } = useFilters();
 
   useEffect(() => {
     base44.entities.Work.list("-value_score").then((d) => {
@@ -20,7 +21,8 @@ export default function Portfolio() {
     }).catch(() => setLoading(false));
   }, []);
 
-  const filtered = filter === "all" ? works : works.filter((w) => w.category === filter);
+  const catFiltered = filter === "all" ? works : works.filter((w) => w.category === filter);
+  const filtered = applyFilters(catFiltered);
 
   const catColors = {
     all: "#ffffff",
