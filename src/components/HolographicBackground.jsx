@@ -141,51 +141,7 @@ export default function HolographicBackground({ videoId = "HGgQpXDIjsw" }) {
         position: "fixed",
       }}
     >
-      {/* YouTube video sphere */}
-      <div
-        style={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          width: sphereSize,
-          height: sphereSize,
-          borderRadius: "50%",
-          overflow: "hidden",
-          zIndex: 1,
-          boxShadow: "0 0 60px rgba(0,255,255,0.25), 0 0 120px rgba(191,0,255,0.15), inset 0 0 40px rgba(0,0,0,0.6)",
-          border: "1px solid rgba(0,255,255,0.2)",
-        }}
-      >
-        {/* Dark overlay to integrate video with the dark theme */}
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background: "rgba(0,0,20,0.25)",
-            zIndex: 2,
-            borderRadius: "50%",
-            pointerEvents: "none",
-          }}
-        />
-        <iframe
-          src={`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=0&showinfo=0&rel=0&modestbranding=1&iv_load_policy=3`}
-          allow="autoplay; encrypted-media"
-          allowFullScreen
-          style={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            // Oversized to fill the circle and hide letterbox bars
-            width: "140%",
-            height: "140%",
-            transform: "translate(-50%, -50%)",
-            border: "none",
-            pointerEvents: "none",
-          }}
-          title="Background video"
-        />
-      </div>
+
     </div>
   );
 }
