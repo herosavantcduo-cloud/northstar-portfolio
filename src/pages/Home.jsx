@@ -7,6 +7,7 @@ import GlitchText from "../components/GlitchText";
 import ExpertiseBar from "../components/ExpertiseBar";
 import WorkCard from "../components/WorkCard";
 import FloatingOrbit from "../components/FloatingOrbit";
+import MarioSprites from "../components/MarioSprites";
 import { ArrowRight } from "lucide-react";
 
 const defaultExpertise = [
@@ -30,6 +31,7 @@ export default function Home() {
   return (
     <div className="relative min-h-screen overflow-x-hidden text-white">
       <HolographicBackground />
+      <MarioSprites />
 
       {/* Hero */}
       <section className="relative z-10 min-h-screen" style={{ touchAction: "none" }}>

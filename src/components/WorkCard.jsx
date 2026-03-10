@@ -36,8 +36,24 @@ export default function WorkCard({ work, onFocus, focused }) {
       });
 
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = 0.92;
-      utterance.pitch = 1.05;
+
+      // Pick the most natural-sounding voice available
+      const pickVoice = () => {
+        const voices = window.speechSynthesis.getVoices();
+        const preferred = ["Samantha", "Karen", "Moira", "Daniel", "Google UK English Female", "Google US English", "en-US-Neural2-F", "Microsoft Aria Online"];
+        for (const name of preferred) {
+          const v = voices.find(v => v.name.includes(name));
+          if (v) return v;
+        }
+        return voices.find(v => v.lang.startsWith("en") && !v.name.toLowerCase().includes("zira")) || voices[0];
+      };
+
+      const setVoice = () => { utterance.voice = pickVoice(); };
+      if (window.speechSynthesis.getVoices().length) setVoice();
+      else window.speechSynthesis.addEventListener("voiceschanged", setVoice, { once: true });
+
+      utterance.rate = 0.88;
+      utterance.pitch = 1.0;
       utterance.onstart = () => setListenState("playing");
       utterance.onend = () => {
         setListenState("idle");
