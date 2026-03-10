@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 
-export default function HolographicBackground({ videoId = "jfKfPfyJRdk" }) {
+export default function HolographicBackground({ videoId = "HGgQpXDIjsw" }) {
   const mountRef = useRef(null);
 
   useEffect(() => {
