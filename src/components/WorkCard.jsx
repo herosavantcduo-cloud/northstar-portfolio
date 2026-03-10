@@ -9,9 +9,50 @@ const categoryColors = {
   other: "#ffff00",
 };
 
-export default function WorkCard({ work }) {
+export default function WorkCard({ work, onFocus, focused }) {
   const [hovered, setHovered] = useState(false);
+  const [listenState, setListenState] = useState("idle"); // idle | loading | playing
   const color = categoryColors[work.category] || "#ffffff";
+
+  const handleListen = async (e) => {
+    e.stopPropagation();
+
+    // Stop if already playing
+    if (listenState === "playing") {
+      window.speechSynthesis.cancel();
+      setListenState("idle");
+      if (onFocus) onFocus(null);
+      return;
+    }
+
+    setListenState("loading");
+    if (onFocus) onFocus(work.id);
+
+    try {
+      const { InvokeLLM } = (await import("@/api/base44Client")).base44.integrations.Core;
+      const text = await InvokeLLM({
+        prompt: `Write a short, engaging 2-3 sentence audio summary of this work for a portfolio visitor. Be compelling and specific. Title: "${work.title}". Category: ${work.category}. Description: "${work.description || "No description provided."}". Tags: ${(work.tags || []).join(", ") || "none"}. Do NOT use markdown or special characters.`,
+      });
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 0.92;
+      utterance.pitch = 1.05;
+      utterance.onstart = () => setListenState("playing");
+      utterance.onend = () => {
+        setListenState("idle");
+        if (onFocus) onFocus(null);
+      };
+      utterance.onerror = () => {
+        setListenState("idle");
+        if (onFocus) onFocus(null);
+      };
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(utterance);
+    } catch {
+      setListenState("idle");
+      if (onFocus) onFocus(null);
+    }
+  };
 
   return (
     <div
