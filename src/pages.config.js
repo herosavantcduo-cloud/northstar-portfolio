@@ -49,18 +49,18 @@
  */
 import Expertise from './pages/Expertise';
 import Home from './pages/Home';
+import PivotAnalysis from './pages/PivotAnalysis';
 import Portfolio from './pages/Portfolio';
 import Research from './pages/Research';
-import PivotAnalysis from './pages/PivotAnalysis';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "Expertise": Expertise,
     "Home": Home,
+    "PivotAnalysis": PivotAnalysis,
     "Portfolio": Portfolio,
     "Research": Research,
-    "PivotAnalysis": PivotAnalysis,
 }
 
 export const pagesConfig = {

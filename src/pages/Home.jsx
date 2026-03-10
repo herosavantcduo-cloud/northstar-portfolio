@@ -8,6 +8,7 @@ import ExpertiseBar from "../components/ExpertiseBar";
 import WorkCard from "../components/WorkCard";
 import FloatingOrbit from "../components/FloatingOrbit";
 import MarioSprites from "../components/MarioSprites";
+import MusicPlayer from "../components/MusicPlayer";
 import { ArrowRight } from "lucide-react";
 
 const defaultExpertise = [
