@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 
-export default function HolographicBackground() {
+export default function HolographicBackground({ videoId = "jfKfPfyJRdk" }) {
   const mountRef = useRef(null);
 
   useEffect(() => {
@@ -12,19 +12,23 @@ export default function HolographicBackground() {
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(width, height);
     renderer.setPixelRatio(window.devicePixelRatio);
+    // Place canvas above the YouTube iframe
+    renderer.domElement.style.position = "absolute";
+    renderer.domElement.style.inset = "0";
+    renderer.domElement.style.zIndex = "2";
     mount.appendChild(renderer.domElement);
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
     camera.position.z = 3;
 
-    // Holographic mesh
-    const geometry = new THREE.IcosahedronGeometry(1.5, 6);
+    // Wireframe sphere around the video
+    const geometry = new THREE.IcosahedronGeometry(1.5, 4);
     const material = new THREE.MeshBasicMaterial({
       color: 0x00ffff,
       wireframe: true,
       transparent: true,
-      opacity: 0.12,
+      opacity: 0.18,
     });
     const mesh = new THREE.Mesh(geometry, material);
     scene.add(mesh);
@@ -60,41 +64,54 @@ export default function HolographicBackground() {
     const particles = new THREE.Points(particleGeo, particleMat);
     scene.add(particles);
 
-    // Second morphing ring
-    const torusGeo = new THREE.TorusGeometry(2.5, 0.02, 8, 80);
+    // Orbiting ring
+    const torusGeo = new THREE.TorusGeometry(2.0, 0.015, 8, 120);
     const torusMat = new THREE.MeshBasicMaterial({
       color: 0xff00ff,
       transparent: true,
-      opacity: 0.15,
+      opacity: 0.25,
     });
     const torus = new THREE.Mesh(torusGeo, torusMat);
     scene.add(torus);
 
+    // Second ring (tilted)
+    const torus2Geo = new THREE.TorusGeometry(2.2, 0.01, 8, 120);
+    const torus2Mat = new THREE.MeshBasicMaterial({
+      color: 0x00ccff,
+      transparent: true,
+      opacity: 0.15,
+    });
+    const torus2 = new THREE.Mesh(torus2Geo, torus2Mat);
+    torus2.rotation.x = Math.PI / 3;
+    scene.add(torus2);
+
     let frame = 0;
+    let reqId;
     const animate = () => {
       frame++;
-      const t = frame * 0.005;
+      const t = frame * 0.004;
 
-      mesh.rotation.x = t * 0.3;
-      mesh.rotation.y = t * 0.5;
-      mesh.scale.setScalar(1 + 0.08 * Math.sin(t * 1.2));
+      mesh.rotation.x = t * 0.25;
+      mesh.rotation.y = t * 0.4;
 
-      particles.rotation.y = t * 0.08;
-      particles.rotation.x = t * 0.04;
+      particles.rotation.y = t * 0.07;
+      particles.rotation.x = t * 0.03;
 
-      torus.rotation.x = t * 0.4;
-      torus.rotation.z = t * 0.2;
+      torus.rotation.x = t * 0.3;
+      torus.rotation.z = t * 0.15;
 
-      // Shift colors over time
-      const hue = (t * 20) % 360;
-      material.color.setHSL(hue / 360, 1, 0.5);
-      torusMat.color.setHSL((hue + 120) / 360, 1, 0.5);
+      torus2.rotation.y = t * 0.2;
+      torus2.rotation.z = t * 0.1;
+
+      const hue = (t * 15) % 360;
+      material.color.setHSL(hue / 360, 1, 0.6);
+      torusMat.color.setHSL((hue + 120) / 360, 1, 0.6);
+      torus2Mat.color.setHSL((hue + 200) / 360, 1, 0.6);
 
       renderer.render(scene, camera);
       reqId = requestAnimationFrame(animate);
     };
-
-    let reqId = requestAnimationFrame(animate);
+    reqId = requestAnimationFrame(animate);
 
     const handleResize = () => {
       const w = mount.clientWidth;
@@ -108,16 +125,67 @@ export default function HolographicBackground() {
     return () => {
       cancelAnimationFrame(reqId);
       window.removeEventListener("resize", handleResize);
-      mount.removeChild(renderer.domElement);
+      if (mount.contains(renderer.domElement)) mount.removeChild(renderer.domElement);
       renderer.dispose();
     };
   }, []);
 
+  const sphereSize = 320;
+
   return (
     <div
       ref={mountRef}
-      className="fixed inset-0 z-0 pointer-events-none"
-      style={{ background: "radial-gradient(ellipse at center, #0a001a 0%, #000008 100%)" }}
-    />
+      className="fixed inset-0 z-0 pointer-events-none overflow-hidden"
+      style={{
+        background: "radial-gradient(ellipse at center, #0a001a 0%, #000008 100%)",
+        position: "fixed",
+      }}
+    >
+      {/* YouTube video sphere */}
+      <div
+        style={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: sphereSize,
+          height: sphereSize,
+          borderRadius: "50%",
+          overflow: "hidden",
+          zIndex: 1,
+          boxShadow: "0 0 60px rgba(0,255,255,0.25), 0 0 120px rgba(191,0,255,0.15), inset 0 0 40px rgba(0,0,0,0.6)",
+          border: "1px solid rgba(0,255,255,0.2)",
+        }}
+      >
+        {/* Dark overlay to integrate video with the dark theme */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: "rgba(0,0,20,0.25)",
+            zIndex: 2,
+            borderRadius: "50%",
+            pointerEvents: "none",
+          }}
+        />
+        <iframe
+          src={`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=0&showinfo=0&rel=0&modestbranding=1&iv_load_policy=3`}
+          allow="autoplay; encrypted-media"
+          allowFullScreen
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            // Oversized to fill the circle and hide letterbox bars
+            width: "140%",
+            height: "140%",
+            transform: "translate(-50%, -50%)",
+            border: "none",
+            pointerEvents: "none",
+          }}
+          title="Background video"
+        />
+      </div>
+    </div>
   );
 }
