@@ -60,9 +60,10 @@ function AppShell({ children, currentPageName }) {
       <nav
         className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4"
         style={{
-          background: "rgba(0,0,8,0.7)",
-          backdropFilter: "blur(16px)",
-          borderBottom: "1px solid rgba(255,255,255,0.05)",
+          background: "rgba(0,0,8,0.6)",
+          backdropFilter: "blur(24px)",
+          WebkitBackdropFilter: "blur(24px)",
+          borderBottom: "1px solid rgba(255,255,255,0.04)",
         }}
       >
         <Link
