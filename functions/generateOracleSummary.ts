@@ -1,53 +1,66 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
 
 const ORACLE_PROMPT = (work) => `
-You are the Global Tech Oracle. Analyze the following research work and produce a structured 7-step report. Every step must be addressed before proceeding to the next — no step may be skipped.
+You are the Global Tech Oracle — an analytical engine applying the Structured Technology Analysis Spec (STAS). 
+You MUST produce a complete 7-section technical critique. Every section is mandatory. Do not skip or abbreviate any section.
 
-Work Title: "${work.title}"
-Category: ${work.category || 'research'}
-Description: ${work.description || 'No description provided.'}
+---
+SUBJECT DOSSIER
+Title: "${work.title}"
+Category: ${work.category || 'unspecified'}
 Tags: ${(work.tags || []).join(', ') || 'none'}
-Content Preview: ${work.content_preview || 'None provided.'}
+Description: ${work.description || 'No description provided.'}
+${work.content_preview ? `Content Preview: ${work.content_preview}` : ''}
+---
 
-Produce the analysis in EXACTLY this 7-step format:
+PRODUCE THE FULL REPORT IN EXACTLY THIS FORMAT:
 
-**1. Brief Summary**
-A concise 3-sentence introduction outlining the technology/concept and its core function.
+**SECTION 1 — EXECUTIVE SUMMARY**
+In 3–4 precise sentences: what is this, what problem does it solve, and what is its core technical mechanism? State the innovation claim plainly.
 
-**2. Technological Breakdown**
-How it works, its components, technical limitations.
+**SECTION 2 — TECHNOLOGICAL BREAKDOWN**
+Decompose the underlying architecture, components, and processes. Identify the primary technical assumptions. Describe the mechanism of action in engineering terms. List known technical constraints, failure modes, or boundary conditions.
 
-**3. Societal & Economic Impact**
-Effects on industries, consumers, and economies. Regulatory challenges.
+**SECTION 3 — SOCIETAL & ECONOMIC IMPACT**
+Map direct and second-order effects on industries, labor markets, and consumer behavior. Identify which economic actors benefit and which face disruption. Outline likely regulatory responses and jurisdictional challenges.
 
-**4. Statistical & Market Analysis**
-Reference data trends, adoption rates, or case studies. Flag where real-world data insertion is needed.
+**SECTION 4 — STATISTICAL & MARKET ANALYSIS**
+Estimate or cite relevant market size, adoption trajectory, and growth vectors. Reference analogous technologies for benchmark comparisons. Flag any data gaps where real-world validation is still required. Provide projected timelines where applicable.
 
-**5. Competing Viewpoints**
-- Tech Optimist: Why this is transformative and should be widely adopted.
-- Tech Skeptic: Flaws, risks, or economic concerns.
-- Investor Perspective: Financial viability, projected growth, scalability.
-- Ethical Watchdog: Privacy, ethics, or misuse risks.
+**SECTION 5 — COMPETING VIEWPOINTS**
+- **Tech Optimist**: Why this is transformative; adoption case; best-case trajectory.
+- **Tech Skeptic**: Core technical risks, overreach, or implementation gaps.
+- **Investor Perspective**: Financial viability, ROI horizon, scalability economics, exit scenarios.
+- **Ethical Watchdog**: Privacy, autonomy, misuse vectors, or equity concerns.
 
-**6. Geopolitical & Ethical Considerations**
-How different countries might react, global challenges, ethical dilemmas.
+**SECTION 6 — GEOPOLITICAL & ETHICAL DIMENSIONS**
+Analyze how major geopolitical blocs (US, EU, China, Global South) would approach this differently. Identify dual-use risks, international IP disputes, or cross-border ethical conflicts. Assess military, surveillance, or sovereignty implications if relevant.
 
-**7. Final Evaluation**
-Summarize viability, scalability, and ethical standing based on all factors above.
+**SECTION 7 — FINAL EVALUATION & VERDICT**
+Synthesize all prior sections into a final assessment. Rate the following on a 1–10 scale with one-line justifications:
+- Technical Maturity: X/10
+- Commercial Viability: X/10
+- Ethical Standing: X/10
+- Geopolitical Risk: X/10
+Conclude with a single VERDICT sentence: Transformative / Promising / Speculative / Premature / Concerning — and why.
 
-Do NOT use markdown code blocks. Use plain bold headers as shown. Be specific, analytical, and structured.
+---
+EVIDENCE CLASSIFICATION: For each claim, mentally tag it as [Evidence-Backed], [Plausible], or [Speculative] — do not print tags, but ensure your language reflects the appropriate confidence level.
+Do NOT use markdown code blocks. Use bold headers exactly as shown above. Be dense, analytical, and specific.
 `;
 
 Deno.serve(async (req) => {
+    let work_id;
     try {
         const base44 = createClientFromRequest(req);
-        const { work_id } = await req.json();
+        const body = await req.json();
+        work_id = body.work_id;
 
         if (!work_id) {
             return Response.json({ error: 'work_id is required' }, { status: 400 });
         }
 
-        // Mark as generating
+        // Mark as generating immediately
         await base44.asServiceRole.entities.Work.update(work_id, {
             oracle_status: 'generating'
         });
@@ -57,33 +70,31 @@ Deno.serve(async (req) => {
         const work = works.find(w => w.id === work_id);
 
         if (!work) {
+            await base44.asServiceRole.entities.Work.update(work_id, { oracle_status: 'error' });
             return Response.json({ error: 'Work not found' }, { status: 404 });
         }
 
-        // Generate oracle summary
+        // Generate full 7-section oracle analysis
         const summary = await base44.asServiceRole.integrations.Core.InvokeLLM({
             prompt: ORACLE_PROMPT(work),
             model: 'claude_sonnet_4_6'
         });
 
-        // Save back to the entity
+        // Persist results
         await base44.asServiceRole.entities.Work.update(work_id, {
             oracle_summary: summary,
             oracle_status: 'complete'
         });
 
-        return Response.json({ success: true, work_id, oracle_summary: summary });
+        return Response.json({ success: true, work_id });
 
     } catch (error) {
-        // Try to mark as error if we have work_id
-        try {
-            const base44 = createClientFromRequest(req);
-            const { work_id } = await req.json().catch(() => ({}));
-            if (work_id) {
+        if (work_id) {
+            try {
+                const base44 = createClientFromRequest(req);
                 await base44.asServiceRole.entities.Work.update(work_id, { oracle_status: 'error' });
-            }
-        } catch {}
-
+            } catch (_) {}
+        }
         return Response.json({ error: error.message }, { status: 500 });
     }
 });

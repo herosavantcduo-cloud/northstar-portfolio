@@ -1,35 +1,40 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
 
-// This function is called by entity automation on Work create/update
-// It triggers oracle generation only for research-category works without a summary
+// Triggered on Work create OR update
+// Fires oracle generation for ANY category when oracle_status becomes 'pending'
 
 Deno.serve(async (req) => {
     try {
         const base44 = createClientFromRequest(req);
         const payload = await req.json();
-
-        const { event, data } = payload;
+        const { event, data, old_data } = payload;
         const work = data;
 
         if (!work) {
             return Response.json({ skipped: true, reason: 'no data' });
         }
 
-        // Only process research entries without an existing complete oracle summary
-        const isResearch = work.category === 'research';
-        const needsOracle = !work.oracle_status || work.oracle_status === 'pending';
-        const notAlreadyRunning = work.oracle_status !== 'generating' && work.oracle_status !== 'complete';
+        const isPending = work.oracle_status === 'pending';
+        const wasAlreadyPending = old_data && old_data.oracle_status === 'pending';
+        const isCreate = event?.type === 'create';
+        const isUpdate = event?.type === 'update';
 
-        if (!isResearch || !notAlreadyRunning) {
-            return Response.json({ skipped: true, reason: 'not research or already processed' });
+        // On create: fire if pending
+        // On update: fire only if status just became pending (avoid re-triggering loops)
+        if (!isPending) {
+            return Response.json({ skipped: true, reason: 'oracle_status is not pending' });
         }
 
-        // Fire the oracle generation
-        await base44.asServiceRole.functions.invoke('generateOracleSummary', {
-            work_id: work.id
-        });
+        if (isUpdate && wasAlreadyPending) {
+            return Response.json({ skipped: true, reason: 'already was pending, no state change' });
+        }
 
-        return Response.json({ triggered: true, work_id: work.id });
+        // Fire oracle generation asynchronously
+        base44.asServiceRole.functions.invoke('generateOracleSummary', {
+            work_id: work.id
+        }).catch(() => {});
+
+        return Response.json({ triggered: true, work_id: work.id, category: work.category });
 
     } catch (error) {
         return Response.json({ error: error.message }, { status: 500 });
