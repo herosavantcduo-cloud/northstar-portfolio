@@ -10,6 +10,7 @@ export default function Portfolio() {
   const [works, setWorks] = useState([]);
   const [filter, setFilter] = useState("all");
   const [loading, setLoading] = useState(true);
+  const [focusedId, setFocusedId] = useState(null);
 
   useEffect(() => {
     base44.entities.Work.list("-value_score").then((d) => {
