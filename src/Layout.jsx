@@ -8,6 +8,7 @@ const navLinks = [
   { label: "Portfolio", page: "Portfolio" },
   { label: "Research", page: "Research" },
   { label: "Expertise", page: "Expertise" },
+  { label: "Pivot", page: "PivotAnalysis" },
 ];
 
 export default function Layout({ children, currentPageName }) {
