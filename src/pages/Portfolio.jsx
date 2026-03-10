@@ -3,6 +3,7 @@ import { base44 } from "@/api/base44Client";
 import HolographicBackground from "../components/HolographicBackground";
 import WorkCard from "../components/WorkCard";
 import GlitchText from "../components/GlitchText";
+import { useFilters } from "@/components/FilterContext";
 
 const CATEGORIES = ["all", "writing", "research", "notation", "design", "other"];
 

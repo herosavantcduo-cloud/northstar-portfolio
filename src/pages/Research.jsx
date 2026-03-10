@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
+import { useFilters } from "@/components/FilterContext";
 import HolographicBackground from "@/components/HolographicBackground";
 import GlitchText from "@/components/GlitchText";
 import ResearchTagCloud from "@/components/research/ResearchTagCloud";
