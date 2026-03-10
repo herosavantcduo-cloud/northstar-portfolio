@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { base44 } from "@/api/base44Client";
-import { useFilters } from "@/lib/FilterContext";
+import { useFilters } from "@/components/FilterContext";
 import { X, RotateCcw, SlidersHorizontal, Tag, Calendar, Star } from "lucide-react";
 
 export default function FilterSidebar() {
