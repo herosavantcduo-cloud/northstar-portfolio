@@ -58,12 +58,15 @@ export default function WorkCard({ work, onFocus, focused }) {
     <div
       className="relative rounded-xl p-5 cursor-pointer transition-all duration-500 overflow-hidden"
       style={{
-        background: hovered
-          ? `linear-gradient(135deg, rgba(${hexToRgb(color)},0.12) 0%, rgba(0,0,20,0.9) 100%)`
+        background: focused || hovered
+          ? `linear-gradient(135deg, rgba(${hexToRgb(color)},0.16) 0%, rgba(0,0,20,0.95) 100%)`
           : "rgba(255,255,255,0.04)",
-        border: `1px solid ${hovered ? color : "rgba(255,255,255,0.08)"}`,
-        boxShadow: hovered ? `0 0 30px ${color}33, 0 0 2px ${color}` : "none",
-        transform: hovered ? "translateY(-4px) scale(1.01)" : "none",
+        border: `1px solid ${focused ? color : hovered ? color : "rgba(255,255,255,0.08)"}`,
+        boxShadow: focused
+          ? `0 0 60px ${color}55, 0 0 4px ${color}, 0 0 120px ${color}22`
+          : hovered ? `0 0 30px ${color}33, 0 0 2px ${color}` : "none",
+        transform: focused ? "scale(1.03)" : hovered ? "translateY(-4px) scale(1.01)" : "none",
+        zIndex: focused ? 20 : "auto",
       }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
