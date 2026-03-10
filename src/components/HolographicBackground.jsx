@@ -130,8 +130,6 @@ export default function HolographicBackground({ videoId = "HGgQpXDIjsw" }) {
     };
   }, []);
 
-  const sphereSize = 320;
-
   return (
     <div
       ref={mountRef}
