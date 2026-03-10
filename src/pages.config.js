@@ -48,7 +48,6 @@
  * The mainPage value must match a key in the PAGES object exactly.
  */
 import Expertise from './pages/Expertise';
-import Home from './pages/Home';
 import PivotAnalysis from './pages/PivotAnalysis';
 import Portfolio from './pages/Portfolio';
 import Research from './pages/Research';
@@ -57,14 +56,13 @@ import __Layout from './Layout.jsx';
 
 export const PAGES = {
     "Expertise": Expertise,
-    "Home": Home,
     "PivotAnalysis": PivotAnalysis,
     "Portfolio": Portfolio,
     "Research": Research,
 }
 
 export const pagesConfig = {
-    mainPage: "Home",
+    mainPage: "Expertise",
     Pages: PAGES,
     Layout: __Layout,
 };
