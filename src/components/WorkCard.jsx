@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ExternalLink, Star, Volume2, Loader2, StopCircle } from "lucide-react";
+import OracleSummaryPanel from "@/components/OracleSummaryPanel";
 
 const categoryColors = {
   writing: "#00ffcc",
