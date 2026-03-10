@@ -111,18 +111,41 @@ export default function WorkCard({ work, onFocus, focused }) {
         </div>
       )}
 
-      {work.link && (
-        <a
-          href={work.link}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-4 inline-flex items-center gap-1 text-xs font-mono transition-opacity"
-          style={{ color, opacity: hovered ? 1 : 0 }}
-          onClick={(e) => e.stopPropagation()}
+      <div className="mt-4 flex items-center gap-3">
+        {/* Listen button */}
+        <button
+          onClick={handleListen}
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono uppercase tracking-widest transition-all duration-300"
+          style={{
+            border: `1px solid ${listenState === "playing" ? "#ff4466" : color}`,
+            color: listenState === "playing" ? "#ff4466" : color,
+            background: listenState === "playing" ? "rgba(255,68,102,0.1)" : `${color}11`,
+            boxShadow: listenState === "playing" ? "0 0 16px rgba(255,68,102,0.4)" : listenState === "loading" ? `0 0 12px ${color}44` : "none",
+          }}
         >
-          VIEW <ExternalLink className="w-3 h-3" />
-        </a>
-      )}
+          {listenState === "loading" ? (
+            <Loader2 className="w-3 h-3 animate-spin" />
+          ) : listenState === "playing" ? (
+            <StopCircle className="w-3 h-3" />
+          ) : (
+            <Volume2 className="w-3 h-3" />
+          )}
+          {listenState === "loading" ? "Loading…" : listenState === "playing" ? "Stop" : "Listen"}
+        </button>
+
+        {work.link && (
+          <a
+            href={work.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-xs font-mono transition-opacity"
+            style={{ color, opacity: hovered || focused ? 1 : 0 }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            VIEW <ExternalLink className="w-3 h-3" />
+          </a>
+        )}
+      </div>
 
       {/* Glow border sweep */}
       {hovered && (
