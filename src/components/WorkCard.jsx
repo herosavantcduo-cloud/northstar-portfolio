@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ExternalLink, Star } from "lucide-react";
+import { ExternalLink, Star, Volume2, Loader2, StopCircle } from "lucide-react";
 
 const categoryColors = {
   writing: "#00ffcc",
