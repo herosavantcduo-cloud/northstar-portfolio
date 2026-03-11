@@ -12,6 +12,7 @@ const navLinks = [
   { label: "Research", page: "Research" },
   { label: "Expertise", page: "Expertise" },
   { label: "Pivot", page: "PivotAnalysis" },
+  { label: "Profile", page: "Profile" },
 ];
 
 const SIDEBAR_PAGES = ["Portfolio", "Research", "PivotAnalysis"];
