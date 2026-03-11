@@ -1,28 +1,40 @@
 import { useEffect, useRef, useState } from "react";
 import { Music, Upload, Play, Pause, Volume2, VolumeX, X } from "lucide-react";
 
+const DEFAULT_TRACK = {
+  name: "Ambient Drift",
+  url: "https://www.bensound.com/bensound-music/bensound-slowmotion.mp3",
+};
+
 export default function MusicPlayer() {
-  const [track, setTrack] = useState(null); // { name, url }
+  const [track, setTrack] = useState(DEFAULT_TRACK);
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(false);
-  const [volume, setVolume] = useState(0.5);
+  const [volume, setVolume] = useState(0.15);
   const [progress, setProgress] = useState(0);
   const [expanded, setExpanded] = useState(false);
   const audioRef = useRef(null);
   const inputRef = useRef(null);
 
+  // Auto-play default track on mount at 15% volume
+  useEffect(() => {
+    if (!audioRef.current) return;
+    audioRef.current.volume = 0.15;
+    audioRef.current.play().then(() => setPlaying(true)).catch(() => {});
+  }, []);
+
   const handleFile = (e) => {
     const file = e.target.files[0];
     if (!file) return;
     const url = URL.createObjectURL(file);
-    if (track) URL.revokeObjectURL(track.url);
+    if (track && track.url !== DEFAULT_TRACK.url) URL.revokeObjectURL(track.url);
     setTrack({ name: file.name.replace(/\.[^/.]+$/, ""), url });
     setPlaying(false);
     setProgress(0);
   };
 
   useEffect(() => {
-    if (!audioRef.current || !track) return;
+    if (!audioRef.current || !track || track === DEFAULT_TRACK) return;
     audioRef.current.src = track.url;
     audioRef.current.volume = volume;
     audioRef.current.play();
