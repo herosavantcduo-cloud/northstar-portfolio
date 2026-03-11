@@ -86,7 +86,7 @@ export default function MusicPlayer() {
         gap: 8,
       }}
     >
-      <audio ref={audioRef} loop onTimeUpdate={handleTimeUpdate} onEnded={() => setPlaying(false)} />
+      <audio ref={audioRef} src={DEFAULT_TRACK.url} loop onTimeUpdate={handleTimeUpdate} onEnded={() => setPlaying(false)} />
 
       {/* Expanded panel */}
       {expanded && (
