@@ -1,4 +1,4 @@
-this is what I've been doing with a is myself and been trying to help the world little by little
+this is what I've been doing with aI  myself and been trying to help the world little by little
 
 1. AI Architecture & Symbolic Logic (Alignment & Rigor)
 Symbolic Instruction Language (SIL): You have developed a declarative grammar that moves AI from "prompting" to "language-design level" control
