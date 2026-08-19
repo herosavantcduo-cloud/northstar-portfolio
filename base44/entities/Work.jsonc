@@ -1,0 +1,59 @@
+{
+  "name": "Work",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "writing",
+        "research",
+        "notation",
+        "design",
+        "other"
+      ]
+    },
+    "value_score": {
+      "type": "number",
+      "description": "Score 1-100 representing value/quality"
+    },
+    "link": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "featured": {
+      "type": "boolean",
+      "default": false
+    },
+    "content_preview": {
+      "type": "string"
+    },
+    "oracle_summary": {
+      "type": "string",
+      "description": "Auto-generated Global Tech Oracle 7-step structured analysis"
+    },
+    "oracle_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "generating",
+        "complete",
+        "error"
+      ],
+      "description": "Status of the oracle summary generation"
+    }
+  },
+  "required": [
+    "title"
+  ]
+}

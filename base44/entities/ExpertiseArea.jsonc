@@ -1,0 +1,25 @@
+{
+  "name": "ExpertiseArea",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "rank_score": {
+      "type": "number",
+      "description": "Score 1-100"
+    },
+    "color": {
+      "type": "string"
+    },
+    "icon": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}
